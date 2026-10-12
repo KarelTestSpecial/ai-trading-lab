@@ -8,11 +8,16 @@ license = { text = "MIT" }
 
 # Deliberately dependency-light: the quant engine is pure Python (no pandas/numpy
 # black boxes) and the data layer uses the standard-library HTTP client, so the
-# whole thing is auditable and testable offline. Fase 1 adds YAML config loading.
+# whole thing is auditable and testable offline.
+#
+# cadence-core is the shared kernel of the Cadence platform (judgment contract,
+# calibration math, HTTP transport, context digest, the Jev client). Pinned to a
+# tag, not a branch, so the paper-loop stays reproducible; bump it deliberately.
 dependencies = [
     "pydantic>=2.7",
     "python-dotenv>=1.0",
     "pyyaml>=6.0",
+    "cadence-core @ git+https://github.com/cadence-trading/cadence-core@v0.1.0",
 ]
 
 [dependency-groups]
@@ -27,6 +32,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
+
+# cadence-core is consumed as a git reference (see `dependencies` above), which
+# hatchling only allows when this flag is set.
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

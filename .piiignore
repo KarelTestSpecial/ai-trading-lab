@@ -1,0 +1,6 @@
+# PII-check exemptions (each with a documented reason).
+# The MIT copyright holder is a deliberate, public author identity.
+LICENSE  # MIT copyright holder (public author identity, intentional)
+# The "@v0.1.0" pin in the cadence-core git reference is read as an email address
+# by the check's heuristic. It is a public dependency URL, not an address.
+pyproject.toml

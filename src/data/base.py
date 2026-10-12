@@ -1,11 +1,10 @@
-"""Data provider interface.
+"""Stock market-data primitives.
 
-Fase 0 defines the contract only. Fase 1 adds the concrete providers:
-Alpaca (IEX, primary), yfinance (fallback), Stooq (EOD CSV), plus EDGAR/RSS/FRED
-for the context layer.
-
-Reliability rules (PLAN.md §4): one primary source + cross-check, log the exact
-snapshot used for each decision, use adjusted bars, avoid survivorship bias.
+`DataError` is owned by cadence-core (single source of truth for the data-layer
+error type) and re-exported here so the venue providers import one local module.
+The daily-bar `Bar` and the `DataProvider` contract are asset-specific — they key
+on a calendar `day` rather than a timestamp, because equities trade one session
+per day — and cadence-core defines no bar type on purpose.
 """
 
 from __future__ import annotations
@@ -14,9 +13,9 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import date
 
+from cadence_core.data.base import DataError
 
-class DataError(RuntimeError):
-    """Raised when a data source cannot be reached or returns unusable data."""
+__all__ = ["Bar", "DataError", "DataProvider"]
 
 
 @dataclass(frozen=True)

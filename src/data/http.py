@@ -1,44 +1,30 @@
-"""Minimal HTTP helpers built on the standard library.
+"""HTTP transport for ai-trading-lab.
 
-Deliberately no third-party HTTP client: the data layer stays dependency-light
-and auditable (PLAN.md §4). Timeouts are mandatory so a hung feed can never wedge
-the daily loop.
+The transport itself lives in cadence-core (single source of truth: timeouts,
+error detail, JSON handling). This module only pins the client identity so public
+market-data APIs see who is calling, and keeps the call sites free of a repeated
+`user_agent=` argument.
 """
 
 from __future__ import annotations
 
-import json
-import urllib.error
-import urllib.request
+from cadence_core.data.http import http_get_json as _get_json
+from cadence_core.data.http import http_get_text as _get_text
+from cadence_core.data.http import http_post_json as _post_json
 
-from src.data.base import DataError
+USER_AGENT = "ai-trading-lab/0.1 (+https://github.com/KarelTestSpecial/ai-trading-lab)"
 
-USER_AGENT = "ai-trading-lab/0.1 (+https://github.com/)"
-
-
-def _get(url: str, headers: dict[str, str], timeout: float) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **headers})
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            return response.read()
-    except urllib.error.HTTPError as exc:
-        raise DataError(f"HTTP {exc.code} for {url}") from exc
-    except urllib.error.URLError as exc:
-        raise DataError(f"network error for {url}: {exc.reason}") from exc
+__all__ = ["USER_AGENT", "http_get_json", "http_get_text", "http_post_json"]
 
 
 def http_get_text(url: str, *, headers: dict[str, str] | None = None, timeout: float = 15.0) -> str:
-    return _get(url, headers or {}, timeout).decode("utf-8", errors="replace")
+    return _get_text(url, headers=headers, timeout=timeout, user_agent=USER_AGENT)
 
 
 def http_get_json(
     url: str, *, headers: dict[str, str] | None = None, timeout: float = 15.0
 ) -> dict:
-    raw = _get(url, headers or {}, timeout)
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise DataError(f"invalid JSON from {url}") from exc
+    return _get_json(url, headers=headers, timeout=timeout, user_agent=USER_AGENT)
 
 
 def http_post_json(
@@ -48,22 +34,4 @@ def http_post_json(
     headers: dict[str, str] | None = None,
     timeout: float = 15.0,
 ) -> dict:
-    body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
-        url,
-        data=body,
-        method="POST",
-        headers={"User-Agent": USER_AGENT, "Content-Type": "application/json", **(headers or {})},
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            raw = response.read()
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise DataError(f"HTTP {exc.code} for {url}: {detail[:200]}") from exc
-    except urllib.error.URLError as exc:
-        raise DataError(f"network error for {url}: {exc.reason}") from exc
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise DataError(f"invalid JSON from {url}") from exc
+    return _post_json(url, payload, headers=headers, timeout=timeout, user_agent=USER_AGENT)

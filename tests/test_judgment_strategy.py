@@ -5,10 +5,10 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
+from cadence_core.context.base import ContextItem
+from cadence_core.judgment.jev import JevAdapter
 
-from src.context.base import ContextItem
 from src.context.static import StaticContextProvider
-from src.judgment.jev import JevAdapter
 from src.judgment.rules import RuleBasedJudge
 from src.policy.risk import RiskLimits
 from src.strategy.arms import build_arm

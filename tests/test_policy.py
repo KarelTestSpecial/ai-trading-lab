@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import pytest
+from cadence_core.judgment.base import Judgment
 
-from src.judgment.base import Judgment
 from src.policy.policy import judgment_weights
 from src.policy.risk import RiskLimits
 

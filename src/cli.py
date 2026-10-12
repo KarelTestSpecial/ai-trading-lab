@@ -18,6 +18,9 @@ from collections.abc import Sequence
 from datetime import date
 from pathlib import Path
 
+from cadence_core.judgment.base import JudgmentError
+from cadence_core.judgment.jev import JevAdapter, JevClient
+
 from src.backtest.compare import ArmSpec, ComparisonContext, compare_arms, render_comparison
 from src.backtest.engine import run_backtest
 from src.backtest.metrics import CostModel
@@ -35,9 +38,7 @@ from src.data.base import Bar, DataError
 from src.data.registry import build_data_provider
 from src.execution.broker import BrokerError, LiveTradingDisabledError, get_broker
 from src.journal.journal import Journal
-from src.judgment.base import JudgmentError
 from src.judgment.factory import build_judge
-from src.judgment.jev import JevAdapter
 from src.judgment.rules import RuleBasedJudge
 from src.loop import run_paper_once
 from src.strategy.arms import ARM_DESCRIPTIONS, build_arm
@@ -271,6 +272,7 @@ def cmd_compare(args: argparse.Namespace) -> int:
         return 1
 
     costs = CostModel(fee_bps=args.fee_bps, slippage_bps=args.slippage_bps)
+    settings = load_settings()
     specs: list[ArmSpec] = []
     for key in [k.strip().upper() for k in args.arms.split(",") if k.strip()]:
         judge = None
@@ -279,7 +281,7 @@ def cmd_compare(args: argparse.Namespace) -> int:
             judge = RuleBasedJudge()
             description += " (offline rule-based judge)"
         elif key == "C":
-            judge = JevAdapter()
+            judge = JevAdapter(JevClient(settings))
         try:
             strategy = build_arm(
                 key,

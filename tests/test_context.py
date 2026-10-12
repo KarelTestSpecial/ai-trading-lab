@@ -5,9 +5,9 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
+from cadence_core.context.base import ContextItem
+from cadence_core.context.digest import build_digest
 
-from src.context.base import ContextItem
-from src.context.digest import build_digest
 from src.context.rss import parse_feed
 from src.context.static import StaticContextProvider
 from src.data.base import DataError

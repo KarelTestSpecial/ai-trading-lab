@@ -11,11 +11,12 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from datetime import date
 
-from src.context.base import ContextProvider
-from src.context.digest import build_digest
+from cadence_core.context.base import ContextProvider
+from cadence_core.context.digest import build_digest
+from cadence_core.judgment.base import Judgment, JudgmentModel
+
 from src.data.base import Bar
 from src.features.snapshot import FeatureParams, build_snapshot
-from src.judgment.base import Judgment, JudgmentModel
 from src.judgment.llm import DEFAULT_QUESTIONS
 from src.policy.policy import judgment_weights
 from src.policy.risk import RiskLimits

@@ -24,7 +24,7 @@ Data → Features → Context → Judgment → Policy → Risk veto → Executio
 - **Backtest engine** — walk-forward, look-ahead-free, costs on turnover, SPY
   benchmark mandatory.
 - **AI layer** — a pluggable judgment model (Google AI Studio over plain REST, a
-  deterministic offline judge, and an adapter stub for a calibrated decision
+  deterministic offline judge, and the Jev client for a calibrated decision
   model) that answers atomic, confidence-scored questions about a snapshot.
 - **Policy + hard risk vetoes** — weights live in code; drawdown, daily-loss,
   position-count and position-size limits have absolute veto power.

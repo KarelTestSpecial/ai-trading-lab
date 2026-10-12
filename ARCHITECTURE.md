@@ -50,8 +50,9 @@ Context (news/filings/macro) → Digest → Judgment model → Policy → weight
 - **Judgment** (`src/judgment/`): the model answers atomic questions over a
   snapshot and returns a typed `Judgment(value, confidence, rationale)`. Clients:
   `LLMJudge` over a pluggable `LLMClient` (`GeminiClient` = Google AI Studio REST,
-  stdlib only; `StaticLLMClient` for tests), `JevAdapter` (arm C stub, inject
-  `predict=` when access exists) and `RuleBasedJudge` (deterministic offline).
+  stdlib only; `StaticLLMClient` for tests), `JevAdapter` over `JevClient` (arm
+  C, from cadence-core; requires a JEV key, otherwise a hard explicit error) and
+  `RuleBasedJudge` (deterministic offline).
   Parsing is defensive: anything out of schema/range raises `JudgmentError`.
 - **Policy** (`src/policy/policy.py`): maps judgments to signed scores and then to
   long-only, non-levered weights capped by the hard limits. Weights live in code,

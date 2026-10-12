@@ -37,6 +37,11 @@ class Settings:
     alpaca_live_base_url: str
     google_api_key: str | None
     journal_path: str
+    # Jev route (arm C). Consumed by cadence-core's JevClient, which only reads
+    # these three attributes — duck-typed, so this project keeps its own Settings.
+    jev_api_key: str | None
+    jev_base_url: str
+    jev_model: str
 
     @classmethod
     def from_env(cls, env: dict[str, str] | None = None) -> Settings:
@@ -65,6 +70,9 @@ class Settings:
             # Committed location: the daily Action appends here and pushes, so the
             # public git history becomes a tamper-evident track record.
             journal_path=env.get("JOURNAL_PATH") or "journal/decisions.jsonl",
+            jev_api_key=env.get("JEV_API_KEY") or None,
+            jev_base_url=env.get("JEV_BASE_URL") or "https://api.typesafe.ai",
+            jev_model=env.get("JEV_MODEL") or "jev",
         )
 
 

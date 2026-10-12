@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from cadence_core.judgment.jev import JevAdapter
+
 from src.backtest.compare import (
     ArmSpec,
     ComparisonContext,
@@ -9,7 +11,6 @@ from src.backtest.compare import (
     render_comparison,
 )
 from src.backtest.metrics import CostModel
-from src.judgment.jev import JevAdapter
 from src.judgment.rules import RuleBasedJudge
 from src.policy.risk import RiskLimits
 from src.strategy.arms import build_arm

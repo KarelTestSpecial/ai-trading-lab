@@ -10,7 +10,8 @@ from __future__ import annotations
 
 import json
 
-from src.judgment.base import Judgment, JudgmentError, JudgmentModel
+from cadence_core.judgment.base import Judgment, JudgmentError, JudgmentModel
+
 from src.judgment.client import LLMClient
 
 DEFAULT_QUESTIONS: dict[str, list[str]] = {"direction": ["up", "down", "flat"]}

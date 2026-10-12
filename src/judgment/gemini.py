@@ -10,8 +10,9 @@ Docs: https://ai.google.dev/api/generate-content
 
 from __future__ import annotations
 
+from cadence_core.judgment.base import JudgmentError
+
 from src.data.http import http_post_json
-from src.judgment.base import JudgmentError
 
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 

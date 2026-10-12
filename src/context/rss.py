@@ -10,7 +10,8 @@ from datetime import date
 from email.utils import parsedate_to_datetime
 from xml.etree import ElementTree
 
-from src.context.base import ContextItem, ContextProvider
+from cadence_core.context.base import ContextItem, ContextProvider
+
 from src.data.base import DataError
 from src.data.http import http_get_text
 

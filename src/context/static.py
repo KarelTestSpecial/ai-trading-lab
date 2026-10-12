@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from src.context.base import ContextItem, ContextProvider
+from cadence_core.context.base import ContextItem, ContextProvider
 
 
 class StaticContextProvider(ContextProvider):

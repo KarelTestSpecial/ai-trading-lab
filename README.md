@@ -48,7 +48,7 @@ Full details: [ARCHITECTURE.md](ARCHITECTURE.md). Risks and limitations:
 | 0 | Plan, scaffold, guardrails, broker gate, CI | ✅ |
 | 1 | Data layer + features + backtest engine (costs + SPY benchmark) | ✅ |
 | 2 | Baseline rules (arm A) + honest metrics report | ✅ |
-| 3 | LLM context + judgment layer (arm B) + Jev stub (arm C) | ✅ |
+| 3 | LLM context + judgment layer (arm B) + Jev client (arm C) | ✅ |
 | 4 | Hybrid (arm D) + `compare-arms` + calibration (Brier/ECE) | ✅ |
 | 5 | GitHub-Action daily paper loop + journal-in-git | ✅ |
 | 6 | Dashboard + deployment + capability narrative | ✅ |

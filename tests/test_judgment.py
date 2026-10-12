@@ -5,11 +5,11 @@ from __future__ import annotations
 import json
 
 import pytest
+from cadence_core.judgment.base import Judgment, JudgmentError
+from cadence_core.judgment.jev import JevAdapter, JevUnavailableError
 
-from src.judgment.base import Judgment, JudgmentError
 from src.judgment.client import StaticLLMClient
 from src.judgment.gemini import GeminiClient, extract_text
-from src.judgment.jev import JevAdapter, JevUnavailableError
 from src.judgment.llm import DEFAULT_QUESTIONS, LLMJudge, parse_judgments
 from src.judgment.rules import RuleBasedJudge
 
@@ -50,16 +50,16 @@ def test_llm_judge_uses_client():
     assert "AAPL" in client.prompts[0]
 
 
-def test_jev_adapter_is_explicit_stub():
+def test_jev_adapter_requires_client_or_predict():
     with pytest.raises(JevUnavailableError):
         JevAdapter().judge({"symbol": "AAPL"}, DEFAULT_QUESTIONS)
 
 
 def test_jev_adapter_with_predict():
-    def predict(snapshot):
+    def predict(snapshot, questions):
         return {"direction": Judgment("direction", "down", 0.6)}
 
-    result = JevAdapter(predict).judge({"symbol": "AAPL"}, DEFAULT_QUESTIONS)
+    result = JevAdapter(predict=predict).judge({"symbol": "AAPL"}, DEFAULT_QUESTIONS)
     assert result["direction"].value == "down"
 
 

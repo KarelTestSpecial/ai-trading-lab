@@ -11,7 +11,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from src.judgment.base import Judgment
+from cadence_core.judgment.base import Judgment
+
 from src.policy.risk import RiskLimits
 
 DIRECTION = "direction"

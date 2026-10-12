@@ -13,10 +13,11 @@ an arm can never silently run without the model it claims to use.
 
 from __future__ import annotations
 
+from cadence_core.context.base import ContextProvider
+from cadence_core.judgment.base import JudgmentModel
+
 from src.backtest.engine import Strategy
-from src.context.base import ContextProvider
 from src.features.snapshot import FeatureParams
-from src.judgment.base import JudgmentModel
 from src.policy.risk import RiskLimits
 from src.strategy.hybrid import HybridStrategy
 from src.strategy.judgment import JudgmentStrategy

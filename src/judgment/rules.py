@@ -10,7 +10,7 @@ judgment model.
 
 from __future__ import annotations
 
-from src.judgment.base import Judgment, JudgmentModel
+from cadence_core.judgment.base import Judgment, JudgmentModel
 
 
 class RuleBasedJudge(JudgmentModel):
