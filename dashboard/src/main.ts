@@ -100,8 +100,12 @@ function render(decisions: Decision[]): void {
 
   const header = elem("header");
   header.append(
-    elem("h1", undefined, "ai-trading-lab"),
-    elem("p", "subtitle", "Public paper-trading track record (US equities, daily)."),
+    elem("h1", undefined, "Cadence"),
+    elem(
+      "p",
+      "subtitle",
+      "Public paper-trading track record (US equities, daily). Repo: ai-trading-lab.",
+    ),
   );
   app.append(header);
 

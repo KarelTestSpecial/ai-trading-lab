@@ -1,8 +1,8 @@
-# ai-trading-lab — example backtest report (synthetic data)
+# Cadence — example backtest report (synthetic data)
 
 _Generated 2026-10-12 07:33 UTC._
 
-This is a **simulation** produced by the `ai-trading-lab` backtest engine. It does not trade real money and is not investment advice.
+This is a **simulation** produced by the Cadence backtest engine (repo `ai-trading-lab`). It does not trade real money and is not investment advice.
 
 ## Configuration
 
