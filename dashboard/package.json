@@ -2,6 +2,7 @@
   "name": "ai-trading-lab-dashboard",
   "private": true,
   "version": "0.0.1",
+  "packageManager": "pnpm@12.3.4",
   "type": "module",
   "description": "Static dashboard for the ai-trading-lab paper track record.",
   "scripts": {
