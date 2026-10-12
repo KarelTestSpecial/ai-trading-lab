@@ -1,0 +1,5 @@
+# esbuild's postinstall is intentionally not run (ignore-scripts=true in .npmrc);
+# its platform binary is provided by the optional @esbuild/* package, so the
+# build works without it. This makes that choice explicit for pnpm 11.
+allowBuilds:
+  esbuild: false

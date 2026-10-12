@@ -1,0 +1,59 @@
+# Daily paper-trading loop.
+#
+# Runs after the US close on weekdays, places Alpaca PAPER orders, appends to
+# journal/decisions.jsonl and commits it, so the public git history becomes a
+# tamper-evident track record.
+#
+# Required repository secrets: ALPACA_API_KEY, ALPACA_SECRET_KEY (paper keys).
+# Safety is enforced in code: TRADING_MODE=paper and PUBLIC_DEMO=true make live
+# trading impossible, and `doctor` re-checks that before anything runs.
+
+name: daily-paper
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "30 21 * * 1-5"  # 21:30 UTC, weekdays (after US close)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-paper
+  cancel-in-progress: false
+
+jobs:
+  paper-run:
+    runs-on: ubuntu-latest
+    env:
+      TRADING_MODE: paper
+      PUBLIC_DEMO: "true"
+      ALLOW_LIVE_TRADING: "false"
+      JOURNAL_PATH: journal/decisions.jsonl
+      PAPER_ARM: A
+      PAPER_JUDGE: rules
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Verify safety gates
+        run: uv run python -m src.cli doctor
+
+      - name: Run one paper cycle
+        run: uv run python -m src.cli paper-run --provider auto
+
+      - name: Commit the journal
+        run: |
+          git config user.name "ai-trading-lab bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add journal/decisions.jsonl
+          if git diff --cached --quiet; then
+            echo "No journal changes to commit."
+          else
+            git commit -m "paper: decision $(date -u +%Y-%m-%d)"
+            git push
+          fi

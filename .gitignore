@@ -1,0 +1,25 @@
+# Runtime
+.env
+var/
+*.jsonl
+!tests/fixtures/*.jsonl
+# The paper track record IS committed (tamper-evident public history).
+!journal/decisions.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / dashboard
+node_modules/
+dashboard/dist/
+
+# OS / editor
+.DS_Store
+*.swp

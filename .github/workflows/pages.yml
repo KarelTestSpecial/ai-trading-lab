@@ -1,0 +1,54 @@
+# Builds the static dashboard and deploys it to GitHub Pages.
+#
+# Enable once in the repository: Settings -> Pages -> Build and deployment ->
+# Source: GitHub Actions. Then this runs on every push to main (which includes
+# the daily journal commit) and can be triggered manually.
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: dashboard/pnpm-lock.yaml
+      - name: Install
+        working-directory: dashboard
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        working-directory: dashboard
+        run: pnpm build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

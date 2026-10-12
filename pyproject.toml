@@ -1,0 +1,42 @@
+[project]
+name = "ai-trading-lab"
+version = "0.0.1"
+description = "Transparent AI-driven paper-trading and backtest platform (US equities, daily/swing). Capability showcase — no real money."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+# Deliberately dependency-light: the quant engine is pure Python (no pandas/numpy
+# black boxes) and the data layer uses the standard-library HTTP client, so the
+# whole thing is auditable and testable offline. Fase 1 adds YAML config loading.
+dependencies = [
+    "pydantic>=2.7",
+    "python-dotenv>=1.0",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+# Planned deps (later phases), kept here as documentation:
+#   Fase 5: fastapi, uvicorn
+# (Fase 1-3 added no quant/HTTP/LLM third-party deps — the engine, data layer and
+#  Google AI Studio client all use the standard library, by design.)

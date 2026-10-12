@@ -1,0 +1,6 @@
+# Hard risk limits. Deterministic vetoes checked before every order (PLAN.md §3).
+max_position_pct: 0.10
+max_daily_loss_pct: 0.03
+max_drawdown_pct: 0.20
+max_positions: 10
+earnings_blackout_days: 3

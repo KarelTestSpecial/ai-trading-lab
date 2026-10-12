@@ -1,0 +1,14 @@
+# Trading universe (US large-caps). Fase 1 loads this; survivorship bias must be
+# handled when this list is used for historical backtests.
+symbols:
+  - AAPL
+  - MSFT
+  - NVDA
+  - AMZN
+  - GOOGL
+  - META
+  - JPM
+  - XOM
+  - UNH
+  - V
+benchmark: SPY
