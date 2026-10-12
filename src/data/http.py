@@ -12,7 +12,7 @@ from cadence_core.data.http import http_get_json as _get_json
 from cadence_core.data.http import http_get_text as _get_text
 from cadence_core.data.http import http_post_json as _post_json
 
-USER_AGENT = "ai-trading-lab/0.1 (+https://github.com/KarelTestSpecial/ai-trading-lab)"
+USER_AGENT = "ai-trading-lab/0.1 (+https://github.com/cadence-trading/ai-trading-lab)"
 
 __all__ = ["USER_AGENT", "http_get_json", "http_get_text", "http_post_json"]
 

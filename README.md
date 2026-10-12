@@ -1,7 +1,7 @@
 # Cadence
 
 > Projectnaam: **Cadence** (repo: `ai-trading-lab`).
-> Live paper track record: <https://kareltestspecial.github.io/ai-trading-lab/>
+> Live paper track record: <https://cadence-trading.github.io/ai-trading-lab/>
 
 A transparent, open AI-driven **paper-trading and backtesting platform** for US
 equities (daily/swing). Built as a capability showcase: the point is not to
