@@ -9,6 +9,13 @@ name: pages
 on:
   push:
     branches: [main]
+  # The daily-paper action commits the journal with GITHUB_TOKEN, and GitHub
+  # does not start new workflow runs for pushes made with that token — so a
+  # push trigger alone would leave the dashboard one day behind. workflow_run
+  # does fire, and rebuilds the site from the fresh commit.
+  workflow_run:
+    workflows: [daily-paper]
+    types: [completed]
   workflow_dispatch: {}
 
 permissions:
@@ -22,6 +29,7 @@ concurrency:
 
 jobs:
   build:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
