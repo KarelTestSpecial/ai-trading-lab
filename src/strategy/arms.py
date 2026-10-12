@@ -25,7 +25,7 @@ from src.strategy.trend import TrendFollowingStrategy
 ARMS = ("A", "B", "C", "D")
 
 ARM_DESCRIPTIONS = {
-    "A": "Deterministic trend baseline: equal-weight the symbols above their MA.",
+    "A": "Deterministic trend baseline: equal-weight the symbols above their MA, capped by the hard position limit.",
     "B": "LLM context + judgment layer feeding the shared policy engine.",
     "C": "Calibrated decision model (Jev adapter) feeding the shared policy engine.",
     "D": "Hybrid: trend rule gates the universe, judgment sizes within it.",
@@ -43,14 +43,19 @@ def build_arm(
     max_positions: int = 10,
 ) -> Strategy:
     key = name.strip().upper()
+    effective_limits = limits or RiskLimits()
     if key == "A":
-        return TrendFollowingStrategy(ma_window=ma_window, max_positions=max_positions)
+        return TrendFollowingStrategy(
+            ma_window=ma_window,
+            max_positions=max_positions,
+            max_position_pct=effective_limits.max_position_pct,
+        )
     if key in {"B", "C"}:
         if judge is None:
             raise ValueError(f"arm {key} requires a judge model (pass judge=...)")
         return JudgmentStrategy(
             judge=judge,
-            limits=limits or RiskLimits(),
+            limits=effective_limits,
             params=params,
             context_provider=context_provider,
         )
@@ -59,7 +64,7 @@ def build_arm(
             raise ValueError("arm D requires a judge model (pass judge=...)")
         return HybridStrategy(
             judge,
-            limits or RiskLimits(),
+            effective_limits,
             params=params,
             context_provider=context_provider,
             ma_window=ma_window,

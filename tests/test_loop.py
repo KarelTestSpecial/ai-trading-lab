@@ -8,6 +8,7 @@ from src.execution.broker import Account, Position
 from src.journal.journal import Journal
 from src.loop import run_paper_once
 from src.policy.risk import RiskLimits
+from src.strategy.arms import build_arm
 from tests.helpers import make_bars
 
 
@@ -104,3 +105,25 @@ def test_sell_closes_position(tmp_path):
     )
     assert record["submitted"][0]["side"] == "sell"
     assert broker.submitted[0].symbol == "AAPL"
+
+
+def test_trend_arm_orders_clear_the_position_limit(tmp_path):
+    """Regression: arm A used to equal-weight 12.5% per pick, so every order was
+    vetoed by max_position_pct=10% and the paper loop could never invest."""
+    symbols = ["AAPL", "AMZN", "GOOGL", "META"]
+    bars = {s: make_bars(s, [100.0 + i for i in range(60)]) for s in symbols}
+    strategy = build_arm("A", ma_window=5)
+    broker = FakeBroker(Account(100_000, 100_000, 100_000, 100_000))
+    journal = Journal(tmp_path / "decisions.jsonl")
+    record = run_paper_once(
+        strategy=strategy,
+        broker=broker,
+        bars_by_symbol=bars,
+        journal=journal,
+        limits=RiskLimits(),
+    )
+    assert record["vetoed"] == []
+    assert len(record["submitted"]) == len(symbols)
+    assert set(record["target_weights"].values()) == {0.10}
+    assert all(abs(order["notional"] - 10_000.0) < 0.01 for order in record["submitted"])
+    assert len(broker.submitted) == len(symbols)
